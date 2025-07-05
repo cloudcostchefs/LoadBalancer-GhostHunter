@@ -1,4 +1,4 @@
-#Requires -Module Az.Accounts, Az.Network, Az.Resources
+ #Requires -Module Az.Accounts, Az.Network, Az.Resources
 <#
 .SYNOPSIS
     LoadBalancer-GhostHunter - Hunt down forgotten and unused Azure Load Balancers
@@ -288,7 +288,7 @@ function New-HtmlReport {
     )
     
     $reportDate = Get-Date -Format "MMMM dd, yyyy 'at' HH:mm"
-    $subscriptionList = ($AllLoadBalancers | Select-Object -ExpandProperty Subscription -Unique) -join ", "
+    $subscriptionList = ($AllLoadBalancers | ForEach-Object { $_.Subscription } | Sort-Object -Unique) -join ", "
     
     # Calculate statistics
     $definiteGhosts = ($SuspiciousLoadBalancers | Where-Object { $_.GhostScore -ge 80 }).Count
@@ -884,4 +884,4 @@ function Start-GhostHunt {
 # 🚀 Execute the ghost hunt
 if ($MyInvocation.InvocationName -ne '.') {
     $results = Start-GhostHunt
-}
+} 
